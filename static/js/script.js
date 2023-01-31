@@ -25,6 +25,13 @@ document.addEventListener('click', e => {
         closeModal(modal)
     }
 });
+
+document.addEventListener('keydown', (e) =>{
+    if (e.code == 'Escape') {
+        modal = document.getElementsByClassName("modal active")[0];
+        closeModal(modal)
+    }
+})
     
 function openModal(modal) {
     if (modal == null) return

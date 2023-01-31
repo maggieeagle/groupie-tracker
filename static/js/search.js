@@ -40,11 +40,17 @@ searchOverlay.addEventListener('click', () =>{
 searchInput.addEventListener('keypress', (e) =>{
     if (e.code == 'Enter') {
         let activeHint = hints.getElementsByClassName('active')[0]
-        if (activeHint != null) {
+        if (activeHint != null) { // to select hint ad put it to search field
             let v = activeHint.getElementsByClassName("hint-value")[0].innerHTML
             searchInput.value = v
             search(searchInput.value)
         }
+        hideOptions()
+    }
+})
+
+searchInput.addEventListener('keydown', (e) =>{
+    if (e.code == 'Escape') {
         hideOptions()
     }
 })
