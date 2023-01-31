@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1 user-scalable=no">
+        <title>Music Wave archive</title>
+        <link href="static/images/favicon.ico" type="image/x-icon" rel="shortcut icon">
+        <link href="static/css/appetite-italic.css" type="text/css" rel="stylesheet">
+        <link href="static/css/styles.css" type="text/css" rel="stylesheet">
+        <link href="static/css/filters.css" type="text/css" rel="stylesheet">
+        <link href="static/css/mobile_styles.css" type="text/css" rel="stylesheet">
+        <link href="static/css/searchbar.css" type="text/css" rel="stylesheet">
+        <link href="static/css/scrollbar.css" type="text/css" rel="stylesheet">
+    </head>
+    <header>
+        <h1 class="header-text" id="header-text">Music Wave archive</h1>
+    </header>
+    <body>
+        <div class="nav-bar" id="grid">
+            <div class="filters">
+                <form action="/filters" method="get" enctype="application/x-www-form-urlencoded" id="filters-form">
+                    <div class="filter-range" id="creation-date-filter">
+                        <div class="filter-title">Creation date:</div>
+                        <div class="date-controls">
+                            <label class="min-date">from <input class="number-input input-min-date" type="text" id="min-date" name="creation-min-date" min="0" value="{{.MinFilterCreationDate}}" autocomplete="off"></label>
+                            <label class="max-date">to <input class="number-input input-max-date" type="text" id="max-date" name="creation-max-date" min="0" value="{{.MaxFilterCreationDate}}" autocomplete="off"></label>
+                        </div>
+                        <div class="range-controls">
+                            <div class="scale" id="date-scale">
+                            <div class="bar" id="date-bar"></div>
+                            </div>
+                            <div class="range-toggle range-toggle-min"></div>
+                            <div class="range-toggle range-toggle-max"></div>
+                        </div>
+                    </div>
+                    <div class="filter-range" id="album-date-filter">
+                        <div class="filter-title">First album date:</div>
+                        <div class="date-controls">
+                            <label class="min-date">from <input class="number-input input-min-date" type="text" id="min-date" name="album-min-date" min="0" value="{{.MinFilterAlbumDate}}" autocomplete="off"></label>
+                            <label class="max-date">to <input class="number-input input-max-date" type="text" id="max-date" name="album-max-date" min="0" value="{{.MaxFilterAlbumDate}}" autocomplete="off"></label>
+                        </div>
+                        <div class="range-controls">
+                            <div class="scale" id="date-scale">
+                            <div class="bar" id="date-bar"></div>
+                            </div>
+                            <div class="range-toggle range-toggle-min"></div>
+                            <div class="range-toggle range-toggle-max"></div>
+                        </div>
+                    </div>
+                    <div class="filter-checkbox" id="members-filter">
+                        <div class="filter-title">Members:</div>
+                        <div class="checkbox-wrapper">
+                            {{range $num := .Members}}
+                                <div class="checkbox-wrap">
+                                    <label for="members{{$num}}">{{$num}}</label>
+                                    <input class="checkbox" type="checkbox" id="members{{$num}}" name="members" value="{{$num}}">
+                                    <span></span>
+                                </div>
+                            {{end}}
+                        </div>
+                    </div>
+                    <div id="filters-overlay"></div>
+                    <button class="btn-transparent" type="submit" id="filter-button">filter</button>
+                </form>
+                <form action="/" method="get" id="reset-button">
+                    <button class="btn-transparent" type="submit">reset</button>
+                </form>
+            </div>
+            <div class="search-bar">
+                <div class="search-form">
+                    <input id="search" type="text" class="input" list="options" autocomplete="off" spellcheck="false" placeholder="search..."/>
+                    <div id="search-options" class="options inactive">
+                        <div id="buttons">
+                            <div class="option-button" id="band-button">band</div>
+                            <div class="option-button" id="member-button">member</div>
+                            <div class="option-button" id="concert-button">concerts</div>
+                            <div class="option-button" id="album-button">album</div>
+                            <div class="option-button" id="creation-button">creation date</div>
+                        </div>
+                        <div id=hints>
+                            <!-- <hr class="hint-line">
+                            <div class="hint">
+                                <div class="hint-value">The Jimi Hendrix Experience</div>
+                                <div class="hint-type">band</div>
+                            </div> -->
+                    </div>
+                    </div>
+                    <div id="search-overlay"></div>
+                </div>
+            </div>
+        </div>
+        <div class="cards-wrap">
+            {{range $Band := .Artists}}
+            <div class="card-wrap">
+                <div data-modal-target="#modal" id="{{$Band.Id}}" class="card">
+                    <img class="card-img-top" decoding="async" src={{$Band.Image}} alt="band picture">
+                    <img class="card-img-top-travolta inactive" loading="lazy" decoding="async" src="static/images/travolta.gif" alt="John Travolta gif">
+                    <div class="card-body">
+                        <h2 class="card-text">{{$Band.Name}}</h2>
+                        <h2 class="card-text-travolta inactive">John Travolta</h2>
+                    </div>
+                </div>
+            </div>
+            {{end}}
+        </div>
+        {{range $Band := .Artists}}
+        <div class="modal" id="modal{{$Band.Id}}">
+            <div class="modal-header">
+                <div class="title">{{$Band.Name}}</div>
+                <button data-close-button class="close-button">&times;</button>
+            </div>
+            <div class="modal-body" id="modal-body">
+                <div class="flip-card">
+                    <div class="flip-card-inner">
+                      <div class="flip-card-front">
+                        <img class="band-image" src={{$Band.Image}} alt="band picture">
+                      </div>
+                      <div class="flip-card-back">
+                        <a title="Go to YouTube" href="https://m.youtube.com/{{$Band.Name}}/videos" target="_blank"><img class="band-image" src="static/images/youtube.png" alt="youtube picture" >
+                        </a>
+                      </div>
+                    </div>
+                </div>
+                <div class="members">
+                    <strong>Members:</strong>
+                    <ul class="member-list">
+                    {{range $Member := $Band.Members}}
+                        <li class="member">
+                            <a class="text-link" title="Visit Wikipedia" href="https://m.wikipedia.org/wiki/{{$Member}}" target="_blank">{{$Member}}</a>
+                        </li>
+                    {{end}}
+                    </ul>
+                    <div class="info">
+                        <strong>Creation date: </strong><div class="creation-date">{{$Band.CreationDate}}</div><br>
+                        <strong>First album: </strong><div class="first-album">{{$Band.FirstAlbum}}</div>
+                    </div>
+                </div>
+                <div class="relation">
+                    <strong>Concerts:</strong>
+                    <ul class="concert-list">
+                    {{range $location, $dates := $Band.Relation}}
+                        <li class="relation-list">
+                            <div class="location">{{$location}}</div>
+                            <ul class="date-list">
+                                {{range $date := $dates}}
+                                <li>
+                                    <a class="text-link" title="Visit YouTube" href="https://m.youtube.com/results?search_query={{$Band.Name}}+{{$location}}+{{$date}}" target="_blank">{{$date}}</a>
+                                </li>
+                                {{end}}
+                            </ul>
+                        </li>
+                    {{end}}
+                    </ul>
+                </div>
+                <div class="map" id="map{{$Band.Id}}"></div>
+            </div>
+        </div>
+        {{end}}
+        <div class="modal" id="modal0">
+            <div class="modal-header">
+                <div class="title">Pulp Fiction</div>
+                <button data-close-button class="close-button">&times;</button>
+            </div>
+            <div class="modal-body" id="modal-body">
+                <div class="flip-card">
+                    <div class="flip-card-inner">
+                      <div class="flip-card-front">
+                        <img class="band-image" loading="lazy" src="static/images/dance.gif" alt="gif from Pulp Fiction">
+                      </div>
+                      <div class="flip-card-back">
+                        <a title="Pulp-Fiction trailer" href="https://ajantis-art.co.uk/pulp-fiction" target="_blank"><img class="band-image" src="static/images/youtube.png" alt="Pulp-Fiction trailer" >
+                        </a>
+                      </div>
+                    </div>
+                </div>
+                <div class="members">
+                    <strong>Members:</strong>
+                    <ul class="member-list">
+                        <li>
+                            <a class="text-link" title="Visit Wikipedia" href="https://m.wikipedia.org/wiki/John Travolta" target="_blank">Vincent Vega</a>
+                        </li>
+                        <li>
+                            <a class="text-link" title="Visit Wikipedia" href="https://m.wikipedia.org/wiki/Samuel L. Jackson" target="_blank">Jules Winnfield</a>
+                        </li>
+                        <li>
+                            <a class="text-link" title="Visit Wikipedia" href="https://m.wikipedia.org/wiki/Uma Thurman" target="_blank">Mia Wallace</a>
+                        </li>
+                        <li>
+                            <a class="text-link" title="Visit Wikipedia" href="https://m.wikipedia.org/wiki/Harvey Keitel" target="_blank">Winston "The Wolf" Wolfe</a>
+                        </li>
+                        <li>
+                            <a class="text-link" title="Visit Wikipedia" href="https://m.wikipedia.org/wiki/Tim Roth" target="_blank">Ringo "Pumpkin"</a>
+                        </li>
+                        <li>
+                            <a class="text-link" title="Visit Wikipedia" href="https://m.wikipedia.org/wiki/Amanda Plummer" target="_blank">Yolanda "Honey Bunny"</a>
+                        </li>
+                        <li>
+                            <a class="text-link" title="Visit Wikipedia" href="https://m.wikipedia.org/wiki/Maria de Medeiros" target="_blank">Fabienne</a>
+                        </li>
+                        <li>
+                            <a class="text-link" title="Visit Wikipedia" href="https://m.wikipedia.org/wiki/Ving Rhames" target="_blank">Marsellus Wallace</a>
+                        </li>
+                        <li>
+                            <a class="text-link" title="Visit Wikipedia" href="https://m.wikipedia.org/wiki/Eric Stoltz" target="_blank">Lance</a>
+                        </li>
+                        <li>
+                            <a class="text-link" title="Visit Wikipedia" href="https://m.wikipedia.org/wiki/Rosanna Arquette" target="_blank">Jody</a>
+                        </li>
+                        <li>
+                            <a class="text-link" title="Visit Wikipedia" href="https://m.wikipedia.org/wiki/Christopher Walken" target="_blank">Captain Koons</a>
+                        </li>
+                        <li>
+                            <a class="text-link" title="Visit Wikipedia" href="https://m.wikipedia.org/wiki/Bruce Willis" target="_blank">Butch Coolidge</a>
+                        </li>
+                    </ul>
+                    <div class="info">
+                        <strong>Creation date: </strong>May 21, 1994<br>
+                        <strong>Directed by: </strong>
+                        <a class="text-link" title="Visit Wikipedia" href="https://m.wikipedia.org/wiki/Quentin Tarantino" target="_blank">Quentin Tarantino</a>
+                    </div>
+                </div>
+                <div class="relation">
+                    <strong>Best of All:</strong>
+                        <ul class="date-list">
+                                <li>
+                                    <a class="text-link" title="Visit YouTube" href="https://www.youtube.com/watch?v=WSLMN6g_Od4&ab_channel=manetaki" target="_blank">Pulp Fiction - Dance Scene</a>
+                                </li>
+
+                                <li>
+                                    <a class="text-link" title="Visit YouTube" href="https://www.youtube.com/watch?v=Y6YBKdmOlM8&ab_channel=ReservoirFrogs" target="_blank">Pulp Fiction - Apartment Scene</a>
+                                </li>
+                                
+                                <li>
+                                    <a class="text-link" title="Visit YouTube" href="https://www.youtube.com/watch?v=mvy4YH9--Vw&ab_channel=DontHateOnJord" target="_blank">Pulp Fiction - Ending Scene</a>
+                                </li>
+
+                                <li>
+                                    <a class="text-link" title="Visit YouTube" href="https://www.youtube.com/watch?v=TnI7fcP_Pnk&ab_channel=FullSoundtracks" target="_blank">Pulp Fiction OST</a>
+                                </li>
+
+                                <li>
+                                    <a class="text-link" title="Visit YouTube" href="https://www.youtube.com/watch?v=itRFjzQICJU&ab_channel=VideosMusicaVEVO" target="_blank">John Travolta Sings</a>
+                                </li>
+                                <li>
+                                    <a class="text-link" title="Visit YouTube" href="https://www.youtube.com/channel/UCEzpxWflVEv_cWMaWIpbjaA" target="_blank">John Travolta Theme</a>
+                                </li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div id="overlay"></div>
+    </body>
+    <footer>
+        <h3 class="footer-text">
+            Created by @Antosha7 and @maggieeagle<br>
+            2023
+        </h3>
+    </footer>
+    <script>
+        const minCreationDate = parseInt("{{.MinCreationDate}}")
+        const maxCreationDate = parseInt("{{.MaxCreationDate}}")
+        const minAlbumDate = parseInt("{{.MinAlbumDate}}")
+        const maxAlbumDate = parseInt("{{.MaxAlbumDate}}")
+        const members = "{{.FilterMembers}}"
+    </script>
+    <script src="static/js/filters.js" type="text/javascript"></script>
+    <script src="static/js/script.js" type="text/javascript"></script>
+    <script src="static/js/timeout.js" type="text/javascript"></script>
+    <script src="static/js/search.js" type="text/javascript"></script>
+    <script src="static/js/map.js" type="text/javascript"></script>
+    <script type='text/javascript' src='https://www.bing.com/api/maps/mapcontrol?callback=GetMap'></script>
+</html>
