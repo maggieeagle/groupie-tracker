@@ -22,7 +22,7 @@ Litvintsev Anton @Antosha7
 
 ## Usage
 
-  [comment]: <> (You can access the website through a DNS: [ https://groupie-tracker.herokuapp.com/](https://groupie-tracker.herokuapp.com/))
+  [comment]: # "You can access the website through a DNS: [ https://groupie-tracker.herokuapp.com/](https://groupie-tracker.herokuapp.com/)"
   
 To run the web-site on local machine:
 
