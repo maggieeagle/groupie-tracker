@@ -22,15 +22,17 @@ Litvintsev Anton @Antosha7
 
 ## Usage
 
-  You can access the website through a DNS: [ https://groupie-tracker.herokuapp.com/](https://groupie-tracker.herokuapp.com/)
+  [comment]: <> (You can access the website through a DNS: [ https://groupie-tracker.herokuapp.com/](https://groupie-tracker.herokuapp.com/))
   
 To run the web-site on local machine:
 
 - Download the repository
 
-- Run with a command `go run .`
+- Run with a command `./run.sh`
 
 - Open [http://localhost:8080/](http://localhost:8080/) in browser
+
+- Stop with a command `./stop.sh`
 
   
 
